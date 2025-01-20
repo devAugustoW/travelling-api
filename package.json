@@ -4,15 +4,16 @@
   "main": "index.js",
   "author": "Augusto Dantas <augustodantas.dev@gmail.com>",
   "license": "MIT",
+	"scripts": {
+		"dev": "nodemon src/server.js --exec sucrase-node"
+	},
   "devDependencies": {
     "nodemon": "^3.1.7",
     "sucrase": "^3.35.0"
   },
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "dotenv": "^16.4.5",
-    "express": "^4.21.1",
-    "json-web-token": "^3.2.0",
-    "mongoose": "^8.8.3"
+    "express": "^4.21.2",
+    "firebase-admin": "^13.0.2"
   }
 }
