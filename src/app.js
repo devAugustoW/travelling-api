@@ -7,8 +7,8 @@ dotenv.config();
 
 const app = express();	
 mongoose.connect(process.env.MONGO_URI)
-.then(() => console.log('Conectado ao MongoDB!'))
-.catch((error) =>console.error('Erro ao conectar ao MongoDB:', error));
+	.then(() => console.log('Conectado ao MongoDB!'))
+	.catch((error) =>console.error('Erro ao conectar ao MongoDB:', error));
 
 app.use(express.json());
 app.use(routes);
