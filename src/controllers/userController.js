@@ -79,6 +79,33 @@ class UserController {
 		}
   }
 
+	// buscar usuário pelo ID
+	async show(req, res) {
+		try {
+			// busca usuário pelo ID, inserido pelo middleware 
+			const user = await User.findById(req.userId);
+			if (!user) {
+				return res.status(404).json({ 
+					message: 'Usuário não encontrado' 
+				});
+			}
+	
+			// não retornar a senha na resposta
+			user.password = undefined;
+	
+			return res.json({
+				user
+			});
+	
+		} catch (error) {
+			console.log('Erro ao buscar usuário:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
+
   // atualizar usuário
   async update(req, res) {
 		try {

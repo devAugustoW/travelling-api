@@ -11,5 +11,6 @@ routes.post('/login', UserController.login);
 
 // atualizar usuário
 routes.put('/updateuser/:id', authMiddleware, UserController.update);
+routes.get('/user', authMiddleware, UserController.show);
 
 export default routes;
