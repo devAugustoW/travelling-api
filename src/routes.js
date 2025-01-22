@@ -3,8 +3,11 @@ import UserController from './controllers/userController';
 
 const routes = new Router();
 
-// rota para criar um usuário
-routes.post('/store', UserController.store);
+// criar um usuário
+routes.post('/createuser', UserController.store);
+
+// logar usuário
+routes.post('/login', UserController.login);
 
 
 export default routes;
