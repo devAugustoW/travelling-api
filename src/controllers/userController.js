@@ -54,7 +54,7 @@ class UserController {
 		// gerar Token
 		const token = jwt.sign(
 			{ id: user._id },
-			
+
 			process.env.JWT_SECRET,
 			{ expiresIn: process.env.JWT_EXPIRES_IN }
 		);
@@ -79,20 +79,61 @@ class UserController {
 		}
   }
 
-  // listar usuários (rota protegida)
-  async index(req, res) {
-   
-  }
-
   // atualizar usuário
   async update(req, res) {
+		try {
+			// busca usuário pelo ID, inserido pelo middleware 
+			const user = await User.findById(req.userId);
+			if (!user) return res.status(404).json({ 
+			message: 'Usuário não encontrado' 
+			});
     
-  }
+			// extrai os dados do corpo da requisição
+			const { name, oldPassword, password, userImg } = req.body;
 
-  // deletar usuário
-  async delete(req, res) {
-   
+			// atualiza se fornecido
+			if (name) user.name = name;
+			if (userImg) user.userImg = userImg;
+			if (password) {
+				// verifica se forneceu a senha antiga
+				if (!oldPassword) {
+					return res.status(400).json({ 
+						message: 'Senha atual é necessária para alterar a senha' 
+					});
+				}
+
+				// verifica se a senha antiga está correta
+				const isPasswordValid = await bcrypt.compare(oldPassword, user.password);
+				if (!isPasswordValid) {
+					return res.status(400).json({ 
+						message: 'Senha atual incorreta' 
+					});
+				}
+
+				// adiciona nova senha aos dados de atualização
+				user.password = password;
+			}
+
+			// salva as alterações de edição do usuário
+			await user.save();
+
+			// Não retornar a senha na resposta
+			user.password = undefined;
+
+			return res.json({
+				message: 'Usuário atualizado com sucesso!',
+				user
+			});
+
+		} catch (error) {
+			console.log('Erro ao atualizar usuário:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
   }
+	
 }
 
 export default new UserController();

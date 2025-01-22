@@ -1,13 +1,15 @@
 import { Router } from 'express';
 import UserController from './controllers/userController';
 
+import authMiddleware from './middleware/authMiddleware';
+
 const routes = new Router();
 
-// criar um usuário
+// rotas públicas
 routes.post('/createuser', UserController.store);
-
-// logar usuário
 routes.post('/login', UserController.login);
 
+// atualizar usuário
+routes.put('/updateuser/:id', authMiddleware, UserController.update);
 
 export default routes;
