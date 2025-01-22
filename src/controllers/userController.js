@@ -37,32 +37,31 @@ class UserController {
   async login(req, res) {
 		try {
 			// extrair dados da requisição
-		const { email, password } = req.body;
+			const { email, password } = req.body;
 
-		// buscar usuário no banco de dados
-    const user = await User.findOne({ email });
-		if (!user) return res.status(400).json({ 
-			message: 'Email ou senha incorretos.' 
-		});
+			// busca usuário no banco de dados
+    	const user = await User.findOne({ email });
+			if (!user) return res.status(400).json({ 
+				message: 'Email ou senha incorretos.' 
+			});
 
-		// comparar senhas
-		const isPasswordValid = await bcrypt.compare(password, user.password);
-		if (!isPasswordValid) return res.status(400).json({ 
-			message: 'Senha incorreta' 
-		});
+			// compara senhas
+			const isPasswordValid = await bcrypt.compare(password, user.password);
+			if (!isPasswordValid) return res.status(400).json({ 
+				message: 'Senha incorreta' 
+			});
 
-		// gerar Token
-		const token = jwt.sign(
-			{ id: user._id },
-
-			process.env.JWT_SECRET,
-			{ expiresIn: process.env.JWT_EXPIRES_IN }
-		);
+			// gerar Token
+			const token = jwt.sign(
+				{ id: user._id },
+				process.env.JWT_SECRET,
+				{ expiresIn: process.env.JWT_EXPIRES_IN }
+			);
 
 		// não retornar a senha na resposta
 		user.password = undefined;
 
-		// retornar a resposta com o usuário logado
+		// retorna a resposta com o usuário logado
 		return res.status(200).json({
       message: 'Login realizado com sucesso.',
       user,
@@ -93,6 +92,7 @@ class UserController {
 			// não retornar a senha na resposta
 			user.password = undefined;
 	
+			// retorna a resposta com o usuário encontrado
 			return res.json({
 				user
 			});
@@ -147,6 +147,7 @@ class UserController {
 			// Não retornar a senha na resposta
 			user.password = undefined;
 
+			// retorna a resposta com o usuário atualizado
 			return res.json({
 				message: 'Usuário atualizado com sucesso!',
 				user
@@ -161,6 +162,33 @@ class UserController {
 		}
   }
 	
+	// deletar usuário
+	async delete(req, res) {
+		try {
+			// busca usuário pelo ID, inserido pelo middleware 
+			const user = await User.findById(req.userId);
+			if (!user) {
+				return res.status(404).json({ 
+					message: 'Usuário não encontrado' 
+				});
+			}
+	
+			// deleta o usuário
+			await User.findByIdAndDelete(req.userId);
+	
+			// retorna a resposta com o usuário deletado
+			return res.json({
+				message: 'Usuário deletado com sucesso'
+			});
+	
+		} catch (error) {
+			console.log('Erro ao deletar usuário:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
 }
 
 export default new UserController();
