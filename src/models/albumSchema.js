@@ -9,33 +9,37 @@ const albumSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  destiny: {
+  destination: {
     type: String,
     required: true
   },
   difficulty: {
     type: String,
-    enum: ['Fácil', 'Médio', 'Difícil'],
-    required: true
+    enum: ['Fácil', 'Médio', 'Difícil'], 
+		default: ""
   },
   timeTravel: {
     type: String,
 		enum: ['30 - 60 min', '60 - 90min', '90min - 2h', '2h - 3h', '+3h'],
-    required: true
+		default: ""
   },
-  custo: {
+  cost: {
     type: String,
-		enum: ['1k', '1k - 3k', '3k - 5k', '+10k'],	
-    required: true
+		enum: ['1k', '1k - 3k', '3k - 5k', '+10k'],
+		default: ""
   },
-  nota: {
+  grade: {
     type: Number,
     min: 0,
     max: 5
   },
   location: {
-    latitude: Number,
-    longitude: Number
+    latitude: { 
+      type: Number
+    },
+    longitude: { 
+      type: Number
+    }
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
