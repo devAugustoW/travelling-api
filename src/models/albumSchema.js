@@ -13,6 +13,15 @@ const albumSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+	typeTrip: {
+    type: String,
+    enum: ['forest', 'mountain', 'beach', 'city', 'work', 'trip'],
+    required: true
+  },
+	tripActivity: {
+    type: String,
+    enum: ['Caminhada', 'Trilha', 'Mergulho', 'Circuito', 'Desafio']
+  },
   difficulty: {
     type: String,
     enum: ['Fácil', 'Médio', 'Difícil'], 
@@ -20,12 +29,12 @@ const albumSchema = new mongoose.Schema({
   },
   timeTravel: {
     type: String,
-		enum: ['30 - 60 min', '60 - 90min', '90min - 2h', '2h - 3h', '+3h'],
+		enum: ['30 - 60min', '60 - 90min', '90min - 2h', '2h - 3h', '+3h'],
 		default: ""
   },
   cost: {
     type: String,
-		enum: ['1k', '1k - 3k', '3k - 5k', '+10k'],
+		enum: ['1k', '1k - 3k', '3k - 5k', '5k - 10k', '+10k'],
 		default: ""
   },
   grade: {
