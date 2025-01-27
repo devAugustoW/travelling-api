@@ -11,8 +11,8 @@ routes.post('/user', UserController.store);
 routes.post('/login', UserController.login);
 
 // rotas user
-routes.put('/user/:id', authMiddleware, UserController.update);
 routes.get('/user', authMiddleware, UserController.show);	
+routes.put('/user/:id', authMiddleware, UserController.update);
 routes.delete('/user/:id', authMiddleware, UserController.delete);
 
 

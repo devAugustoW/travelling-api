@@ -116,11 +116,10 @@ class UserController {
 			});
     
 			// extrai os dados do corpo da requisição
-			const { name, oldPassword, password, userImg } = req.body;
+			const { name, oldPassword, password } = req.body;
 
 			// atualiza se fornecido
 			if (name) user.name = name;
-			if (userImg) user.userImg = userImg;
 			if (password) {
 				// verifica se forneceu a senha antiga
 				if (!oldPassword) {
