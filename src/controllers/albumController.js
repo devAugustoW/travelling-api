@@ -50,6 +50,41 @@ class AlbumController {
       });
     }
   }
+
+	// buscar álbuns do usuário logado
+  async getUserAlbums(req, res) {
+    try {
+      const albums = await Album.find({ userId: req.userId })
+			.populate('userId', '-password')
+			.populate('cover')
+			.sort('-createdAt');
+
+      return res.json({
+        message: 'Álbuns encontrados com sucesso',
+        count: albums.length,
+        albums
+      });
+
+    } catch (error) {
+      console.log('Erro ao buscar álbuns do usuário:', error);
+      return res.status(500).json({ 
+        message: 'Erro no servidor', 
+        error: error.message 
+      });
+    }
+  }
+
+	async getAlbumById(req, res) {
+		try {
+			const album = await Album.findById(req.params.id);
+			if (!album) {
+				return res.status(404).json({ message: 'Álbum não encontrado' });
+			}
+			res.json(album);
+		} catch (error) {
+			res.status(500).json({ message: 'Erro no servidor', error: error.message });
+		}
+	};
 }
 
 export default new AlbumController();

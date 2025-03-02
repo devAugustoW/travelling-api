@@ -58,15 +58,15 @@ class UserController {
 				{ expiresIn: process.env.JWT_EXPIRES_IN }
 			);
 
-		// não retornar a senha na resposta
-		user.password = undefined;
+			// não retornar a senha na resposta
+			user.password = undefined;
 
-		// retorna a resposta com o usuário logado
-		return res.status(200).json({
-      message: 'Login realizado com sucesso.',
-      user,
-      token
-    });
+			// retorna a resposta com o usuário logado
+			return res.status(200).json({
+				message: 'Login realizado com sucesso.',
+				user,
+				token
+			});
 
 		} catch (error) {
 			console.log('Erro ao fazer login:', error);

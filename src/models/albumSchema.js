@@ -20,7 +20,7 @@ const albumSchema = new mongoose.Schema({
   },
 	tripActivity: {
     type: String,
-    enum: ['Caminhada', 'Trilha', 'Mergulho', 'Circuito', 'Desafio']
+    enum: ['Caminhada', 'Trilha', 'Mergulho', 'Pedal', 'Desafio']
   },
   difficulty: {
     type: String,

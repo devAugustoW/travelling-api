@@ -18,6 +18,8 @@ routes.delete('/user/:id', authMiddleware, UserController.delete);
 
 // rotas álbum
 routes.post('/albums', authMiddleware, AlbumController.store);
+routes.get('/user/albums', authMiddleware, AlbumController.getUserAlbums);
+routes.get('/albums/:id', authMiddleware, AlbumController.getAlbumById);
 
 
 export default routes;
