@@ -1,48 +1,43 @@
 import mongoose from 'mongoose';
 
 const albumSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
-  destination: {
-    type: String,
-    required: true
-  },
 	typeTrip: {
     type: String,
     enum: ['forest', 'mountain', 'beach', 'city', 'work', 'trip'],
+    required: true
+  },
+	destination: {
+    type: String,
+    required: true
+  },
+  title: {
+    type: String,
     required: true
   },
 	tripActivity: {
     type: String,
     enum: ['Caminhada', 'Trilha', 'Mergulho', 'Pedal', 'Desafio']
   },
-  difficulty: {
+	difficulty: {
     type: String,
     enum: ['Fácil', 'Médio', 'Difícil'], 
 		default: ""
   },
-  timeTravel: {
+	timeTravel: {
     type: String,
 		enum: ['30 - 60min', '60 - 90min', '90min - 2h', '2h - 3h', '+3h'],
 		default: ""
   },
-  cost: {
+	cost: {
     type: String,
 		enum: ['1k', '1k - 3k', '3k - 5k', '5k - 10k', '+10k'],
 		default: ""
   },
-  grade: {
-    type: Number,
-    min: 0,
-    max: 5
+  description: {
+    type: String,
+    required: true
   },
-  location: {
+	location: {
     latitude: { 
       type: Number
     },
@@ -58,6 +53,11 @@ const albumSchema = new mongoose.Schema({
   cover: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Post'
+  },
+	grade: {
+    type: Number,
+    min: 0,
+    max: 5
   }
 }, {
   timestamps: true
