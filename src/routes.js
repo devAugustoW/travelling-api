@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import UserController from './controllers/userController';
 import AlbumController from './controllers/albumController';
-
+import PostController from './controllers/postController';
 import authMiddleware from './middleware/authMiddleware';
 
 const routes = new Router();
@@ -20,6 +20,9 @@ routes.delete('/user/:id', authMiddleware, UserController.delete);
 routes.post('/albums', authMiddleware, AlbumController.store);
 routes.get('/user/albums', authMiddleware, AlbumController.getUserAlbums);
 routes.get('/albums/:id', authMiddleware, AlbumController.getAlbumById);
+
+// rotas post
+routes.post('/posts', authMiddleware, PostController.store);
 
 
 export default routes;
