@@ -15,14 +15,23 @@ const postSchema = new mongoose.Schema({
   nota: {
     type: Number,
     min: 0,
-    max: 5
+    max: 5,
+		default: 0
   },
   cover: {
     type: Boolean,
     default: false
   },
+	nameLocation: {
+    type: String,
+  },
   location: {
-    type: String
+    latitude: {
+      type: Number,
+    },
+    longitude: {
+      type: Number,
+    }
   },
   userId: {
     type: mongoose.Schema.Types.ObjectId,
