@@ -51,6 +51,32 @@ class PostController {
       return res.status(500).json({ error: 'Erro ao criar post' });
     }
   }
+
+	// buscar posts por álbum
+	async getPostsByAlbum(req, res) {
+    try {
+      const { albumId } = req.params;
+
+      // Verificar se o álbum existe
+      const albumExists = await Album.findById(albumId);
+      if (!albumExists) {
+        return res.status(404).json({ error: 'Álbum não encontrado' });
+      }
+
+      // Verificar se o usuário tem permissão para ver o álbum
+      if (albumExists.userId.toString() !== req.userId) {
+        return res.status(403).json({ error: 'Você não tem permissão para visualizar os posts deste álbum' });
+      }
+
+      // Buscar todos os posts do álbum
+      const posts = await Post.find({ albumId }).sort({ createdAt: -1 });
+
+      return res.json(posts);
+    } catch (error) {
+      console.error('Erro ao buscar posts do álbum:', error);
+      return res.status(500).json({ error: 'Erro ao buscar posts do álbum' });
+    }
+  }
 }
 
 export default new PostController();
