@@ -27,7 +27,15 @@ class PostController {
         return res.status(403).json({ error: 'Você não tem permissão para adicionar posts a este álbum' });
       }
 
-      // Criar o post
+			// novo post marcado como capa, atualizar outrros posts do álbum para cover: false
+			if (cover) {
+				await Post.updateMany(
+					{ albumId, cover: true },
+					{ cover: false }
+				);
+			}
+
+      // cria o novo post
       const post = await Post.create({
         title,
         description,
