@@ -1,6 +1,29 @@
 import Post from '../models/postSchema';
 import Album from '../models/albumSchema';
 
+// função para atualizar o grade do Album
+async function updateAlbumGrade(albumId) {
+  try {
+    // busca todos os posts do álbum com grade maior que zero
+    const posts = await Post.find({ albumId, grade: { $gt: 0 } });
+    
+    // se não houver posts com grade, definir grade como 0
+    if (posts.length === 0) {
+      await Album.findByIdAndUpdate(albumId, { grade: 0 });
+      return;
+    }
+    
+    // calcula a média das notas
+    const totalGrade = posts.reduce((sum, post) => sum + post.grade, 0);
+    const averageGrade = totalGrade / posts.length;
+    
+    // atualiza o grade do álbum
+    await Album.findByIdAndUpdate(albumId, { grade: averageGrade });
+  } catch (error) {
+    console.error('Erro ao atualizar nota do álbum:', error);
+  }
+}
+
 class PostController {
 	// criar um post
   async store(req, res) {
@@ -113,6 +136,9 @@ class PostController {
       // atualiza a grade do post
       post.grade = grade;
       await post.save();
+
+			// Atualizar a nota do álbum
+      await updateAlbumGrade(post.albumId);
 
       return res.json(post);
     } catch (error) {
