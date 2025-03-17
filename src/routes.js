@@ -24,7 +24,7 @@ routes.get('/albums/:id', authMiddleware, AlbumController.getAlbumById);
 // rotas post
 routes.post('/posts', authMiddleware, PostController.store);
 routes.get('/albums/:albumId/posts', authMiddleware, PostController.getPostsByAlbum);
-routes.patch('/posts/:postId/nota', authMiddleware, PostController.updateNota);
+routes.patch('/posts/:postId/grade', authMiddleware, PostController.updateGrade);
 
 
 export default routes;

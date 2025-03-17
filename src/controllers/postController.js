@@ -11,7 +11,7 @@ class PostController {
         imagem, 
         nameLocation, 
         location, 
-        nota, 
+        grade, 
         cover, 
         albumId 
       } = req.body;
@@ -42,7 +42,7 @@ class PostController {
         imagem,
         nameLocation,
         location,
-        nota,
+        grade,
         cover,
         albumId,
         userId: req.userId
@@ -86,14 +86,14 @@ class PostController {
     }
   }
 
-	// atualiza nota do post
-  async updateNota(req, res) {
+	// atualiza grade do post
+  async updateGrade(req, res) {
     try {
       const { postId } = req.params;
-      const { nota } = req.body;
+      const { grade } = req.body;
 
-      // valida se a nota está dentro do intervalo permitido (0-5)
-      if (nota < 0 || nota > 5) {
+      // valida se a grade está dentro do intervalo permitido (0-5)
+      if (grade < 0 || grade > 5) {
         return res.status(400).json({ error: 'A nota deve estar entre 0 e 5' });
       }
 
@@ -110,8 +110,8 @@ class PostController {
         return res.status(403).json({ error: 'Você não tem permissão para atualizar este post' });
       }
 
-      // atualiza a nota do post
-      post.nota = nota;
+      // atualiza a grade do post
+      post.grade = grade;
       await post.save();
 
       return res.json(post);

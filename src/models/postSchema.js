@@ -12,17 +12,17 @@ const postSchema = new mongoose.Schema({
   description: {
     type: String
   },
-  nota: {
+  grade: {
     type: Number,
     min: 0,
     max: 5,
-		default: 0
+    default: 0
   },
   cover: {
     type: Boolean,
     default: false
   },
-	nameLocation: {
+  nameLocation: {
     type: String,
   },
   location: {
