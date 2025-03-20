@@ -109,6 +109,34 @@ class PostController {
     }
   }
 
+	// buscar post por ID
+	async getPostById(req, res) {
+		try {
+			const { id } = req.params;
+			
+			// Busca o post pelo ID
+			const post = await Post.findById(id);
+			
+			// Verifica se o post existe
+			if (!post) {
+				return res.status(404).json({ error: 'Post não encontrado' });
+			}
+			
+			// Verificar se o usuário tem permissão para ver o post
+			// Buscar o álbum relacionado ao post
+			const album = await Album.findById(post.albumId);
+			
+			if (!album || album.userId.toString() !== req.userId) {
+				return res.status(403).json({ error: 'Você não tem permissão para visualizar este post' });
+			}
+			
+			return res.json(post);
+		} catch (error) {
+			console.error('Erro ao buscar post por ID:', error);
+			return res.status(500).json({ error: 'Erro ao buscar post' });
+		}
+	}
+
 	// atualiza grade do post
   async updateGrade(req, res) {
     try {
