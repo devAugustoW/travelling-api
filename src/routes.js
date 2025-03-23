@@ -20,6 +20,7 @@ routes.delete('/user/:id', authMiddleware, UserController.delete);
 routes.post('/albums', authMiddleware, AlbumController.store);
 routes.get('/user/albums', authMiddleware, AlbumController.getUserAlbums);
 routes.get('/albums/:id', authMiddleware, AlbumController.getAlbumById);
+routes.patch('/albums/:albumId/location', authMiddleware, AlbumController.updateLocation);
 
 // rotas post
 routes.post('/posts', authMiddleware, PostController.store);
