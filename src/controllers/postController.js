@@ -137,6 +137,41 @@ class PostController {
 		}
 	}
 
+	// atualizar dados do post
+	async updatePost(req, res) {
+		try {
+			const { postId } = req.params;
+			const updates = req.body;
+
+			// busca o post
+			const post = await Post.findById(postId);
+
+			// verifica se o post existe
+			if (!post) {
+				return res.status(404).json({ error: 'Post não encontrado' });
+			}
+
+			// verifica se o usuário é o dono do post
+			if (post.userId.toString() !== req.userId) {
+				return res.status(403).json({ error: 'Você não tem permissão para atualizar este post' });
+			}
+
+			// atualiza apenas os campos que foram modificados
+			Object.keys(updates).forEach((key) => {
+				if (post[key] !== undefined) {
+					post[key] = updates[key];
+				}
+			});
+
+			await post.save();
+
+			return res.json(post);
+		} catch (error) {
+			console.error('Erro ao atualizar post:', error);
+			return res.status(500).json({ error: 'Erro ao atualizar post' });
+		}
+	}
+
 	// atualiza grade do post
   async updateGrade(req, res) {
     try {
