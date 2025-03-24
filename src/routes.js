@@ -25,6 +25,7 @@ routes.patch('/albums/:albumId/location', authMiddleware, AlbumController.update
 // rotas post
 routes.post('/posts', authMiddleware, PostController.store);
 routes.get('/albums/:albumId/posts', authMiddleware, PostController.getPostsByAlbum);
+routes.get('/albums/:albumId/locations', authMiddleware, PostController.getPostLocationsByAlbum);
 routes.get('/posts/:id', authMiddleware, PostController.getPostById);
 routes.patch('/posts/:postId', authMiddleware, PostController.updatePost);
 routes.patch('/posts/:postId/grade', authMiddleware, PostController.updateGrade);

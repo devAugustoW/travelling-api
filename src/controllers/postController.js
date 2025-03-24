@@ -209,6 +209,52 @@ class PostController {
       return res.status(500).json({ error: 'Erro ao atualizar nota do post' });
     }
   }
+
+  // buscar localizações de posts por álbum
+  async getPostLocationsByAlbum(req, res) {
+    try {
+      const { albumId } = req.params;
+
+      // verifica se o álbum existe
+      const albumExists = await Album.findById(albumId);
+      if (!albumExists) {
+        return res.status(404).json({ error: 'Álbum não encontrado' });
+      }
+
+      // verifica se o usuário tem permissão para ver o álbum
+      if (albumExists.userId.toString() !== req.userId) {
+        return res.status(403).json({ error: 'Você não tem permissão para visualizar este álbum' });
+      }
+
+      // busca todos os posts do álbum que possuem localização
+      const postsWithLocation = await Post.find(
+        { 
+          albumId, 
+          location: { $exists: true },
+          'location.latitude': { $exists: true, $ne: null },
+          'location.longitude': { $exists: true, $ne: null }
+        },
+        'title nameLocation location'  // seleciona apenas os campos necessários
+      );
+
+      // formata os dados da resposta
+      const locations = postsWithLocation.map(post => ({
+        id: post._id,
+        title: post.title,
+        nameLocation: post.nameLocation,
+        location: post.location
+      }));
+
+      return res.json({
+        message: 'Localizações encontradas com sucesso',
+        count: locations.length,
+        locations
+      });
+    } catch (error) {
+      console.error('Erro ao buscar localizações dos posts:', error);
+      return res.status(500).json({ error: 'Erro ao buscar localizações dos posts' });
+    }
+  }
 }
 
 export default new PostController();
