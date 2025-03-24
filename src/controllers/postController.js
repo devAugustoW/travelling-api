@@ -53,8 +53,14 @@ class PostController {
 			// novo post marcado como capa, atualizar outrros posts do álbum para cover: false
 			if (cover) {
 				await Post.updateMany(
-					{ albumId, cover: true },
-					{ cover: false }
+					{ 
+						albumId,
+						cover: true,
+						_id: { $ne: null } // garante que existe um post
+					},
+					{ 
+						$set: { cover: false }
+					}
 				);
 			}
 
@@ -137,34 +143,55 @@ class PostController {
 		}
 	}
 
-	// atualizar dados do post
+	// Atualiza dados do post
 	async updatePost(req, res) {
 		try {
 			const { postId } = req.params;
 			const updates = req.body;
-
+	
 			// busca o post
 			const post = await Post.findById(postId);
-
+	
 			// verifica se o post existe
 			if (!post) {
 				return res.status(404).json({ error: 'Post não encontrado' });
 			}
-
+	
 			// verifica se o usuário é o dono do post
 			if (post.userId.toString() !== req.userId) {
 				return res.status(403).json({ error: 'Você não tem permissão para atualizar este post' });
 			}
+	
+			// tratamento para a capa do álbum
+			if ('cover' in updates) { // verifica se o campo cover está sendo atualizado
+				if (updates.cover === true) {
+					// se está marcando como capa, desmarca todos os outros
+					await Post.updateMany(
+						{ 
+							albumId: post.albumId,
+							_id: { $ne: postId }
+						},
+						{ cover: false }
+					);
+					
+					// atualiza o álbum com o novo post de capa
+					await Album.findByIdAndUpdate(post.albumId, { cover: post._id });
 
+				} else if (updates.cover === false && post.cover === true) {
+					// se está desmarcando a capa atual, remove a referência no álbum
+					await Album.findByIdAndUpdate(post.albumId, { cover: null });
+				}
+			}
+	
 			// atualiza apenas os campos que foram modificados
 			Object.keys(updates).forEach((key) => {
 				if (post[key] !== undefined) {
 					post[key] = updates[key];
 				}
 			});
-
+	
 			await post.save();
-
+	
 			return res.json(post);
 		} catch (error) {
 			console.error('Erro ao atualizar post:', error);
@@ -255,6 +282,29 @@ class PostController {
       return res.status(500).json({ error: 'Erro ao buscar localizações dos posts' });
     }
   }
+
+	// buscar posts com nota máxima do usuário
+	async getBestPosts(req, res) {
+		try {
+			// Busca os posts com grade 5 
+			const bestPosts = await Post.find({
+				userId: req.userId,  // posts do usuário logado
+				grade: 5
+			})
+			.select('title imagem grade createdAt')  // campos retornados
+			.sort('-createdAt')
+			.lean();
+
+			return res.json({
+				count: bestPosts.length,
+				posts: bestPosts
+			});
+
+		} catch (error) {
+			console.error('Erro ao buscar melhores fotos:', error);
+			return res.status(500).json({ error: 'Erro ao buscar melhores fotos' });
+		}
+	}
 }
 
 export default new PostController();
