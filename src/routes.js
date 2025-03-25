@@ -21,6 +21,8 @@ routes.post('/albums', authMiddleware, AlbumController.store);
 routes.get('/user/albums', authMiddleware, AlbumController.getUserAlbums);
 routes.get('/albums/:id', authMiddleware, AlbumController.getAlbumById);
 routes.patch('/albums/:albumId/location', authMiddleware, AlbumController.updateLocation);
+routes.patch('/albums/:albumId/title', authMiddleware, AlbumController.updateTitle);
+routes.patch('/albums/:albumId/description', authMiddleware, AlbumController.updateDescription);
 
 // rotas post
 routes.post('/posts', authMiddleware, PostController.store);

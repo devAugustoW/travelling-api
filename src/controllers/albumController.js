@@ -136,6 +136,89 @@ class AlbumController {
 			});
 		}
 	};
+
+	// atualizar título do álbum
+	async updateTitle(req, res) {
+		try {
+			const { albumId } = req.params;
+			const { title } = req.body;
+
+			// busca o álbum pelo ID
+			const album = await Album.findById(albumId);
+
+			// verifica se o álbum existe
+			if (!album) {
+				return res.status(404).json({ message: 'Álbum não encontrado' });
+			}
+
+			// verifica se o usuário é o dono do álbum
+			if (album.userId.toString() !== req.userId) {
+				return res.status(403).json({ 
+					message: 'Você não tem permissão para atualizar este álbum' 
+				});
+			}
+
+			// atualiza apenas o campo title
+			album.title = title;
+
+			// salva as alterações
+			await album.save();
+
+			return res.json({
+				message: 'Título do álbum atualizado com sucesso',
+				album
+			});
+
+		} catch (error) {
+			console.log('Erro ao atualizar título do álbum:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
+
+	// atualizar descrição do álbum
+	async updateDescription(req, res) {
+		try {
+			const { albumId } = req.params;
+			const { description } = req.body;
+
+			// busca o álbum pelo ID
+			const album = await Album.findById(albumId);
+
+			// verifica se o álbum existe
+			if (!album) {
+				return res.status(404).json({ message: 'Álbum não encontrado' });
+			}
+
+			// verifica se o usuário é o dono do álbum
+			if (album.userId.toString() !== req.userId) {
+				return res.status(403).json({ 
+					message: 'Você não tem permissão para atualizar este álbum' 
+				});
+			}
+
+			// atualiza apenas o campo description
+			album.description = description;
+
+			// salva as alterações
+			await album.save();
+
+			return res.json({
+				message: 'Descrição do álbum atualizada com sucesso',
+				album
+			});
+			
+		} catch (error) {
+			console.log('Erro ao atualizar descrição do álbum:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
+	
 }
 
 export default new AlbumController();
