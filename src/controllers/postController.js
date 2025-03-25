@@ -305,6 +305,46 @@ class PostController {
 			return res.status(500).json({ error: 'Erro ao buscar melhores fotos' });
 		}
 	}
+
+	// deletar um post
+	async delete(req, res) {
+		try {
+			const { postId } = req.params;
+			
+			// busca o post pelo ID
+			const post = await Post.findById(postId);
+			
+			// verifica se o post existe
+			if (!post) {
+				return res.status(404).json({ error: 'Post não encontrado' });
+			}
+			
+			// verifica se o usuário é o dono do post
+			if (post.userId.toString() !== req.userId) {
+				return res.status(403).json({ error: 'Você não tem permissão para deletar este post' });
+			}
+			
+			// verifica se é um post de capa
+			if (post.cover) {
+				// remove a referência no álbum
+				await Album.findByIdAndUpdate(post.albumId, { cover: null });
+			}
+			
+			// deleta o post
+			await Post.findByIdAndDelete(postId);
+			
+			// atualiza a nota do álbum
+			await updateAlbumGrade(post.albumId);
+			
+			return res.json({ 
+				message: 'Post deletado com sucesso'
+			});
+			
+		} catch (error) {
+			console.error('Erro ao deletar post:', error);
+			return res.status(500).json({ error: 'Erro ao deletar post' });
+		}
+	}
 }
 
 export default new PostController();

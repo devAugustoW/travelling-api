@@ -32,6 +32,7 @@ routes.get('/albums/:albumId/locations', authMiddleware, PostController.getPostL
 routes.get('/posts/:id', authMiddleware, PostController.getPostById);
 routes.patch('/posts/:postId', authMiddleware, PostController.updatePost);
 routes.patch('/posts/:postId/grade', authMiddleware, PostController.updateGrade);
+routes.delete('/posts/:postId', authMiddleware, PostController.delete);
 
 
 
