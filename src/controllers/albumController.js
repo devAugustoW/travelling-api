@@ -1,7 +1,8 @@
 import Album from '../models/albumSchema';
+import Post from '../models/postSchema';
 
 class AlbumController {
-  // criar album
+  // Cria album
   async store(req, res) {
     try {
 			// resgata os dados do corpo da requisição
@@ -51,7 +52,7 @@ class AlbumController {
     }
   }
 
-	// buscar álbuns do usuário logado
+	// Busca álbuns do usuário logado
   async getUserAlbums(req, res) {
     try {
       const albums = await Album.find({ userId: req.userId })
@@ -74,7 +75,7 @@ class AlbumController {
     }
   }
 
-	// buscar álbum por id
+	// Busca álbum por id
 	async getAlbumById(req, res) {
 		try {
 			const album = await Album.findById(req.params.id);
@@ -87,7 +88,7 @@ class AlbumController {
 		}
 	};
 
-	// atualizar localização do álbum
+	// Atualiza localização do álbum
 	async updateLocation(req, res) {
 		try {
 			const { albumId } = req.params;
@@ -137,7 +138,7 @@ class AlbumController {
 		}
 	};
 
-	// atualizar título do álbum
+	// Atualiza título do álbum
 	async updateTitle(req, res) {
 		try {
 			const { albumId } = req.params;
@@ -178,7 +179,7 @@ class AlbumController {
 		}
 	}
 
-	// atualizar descrição do álbum
+	// Atualiza descrição do álbum
 	async updateDescription(req, res) {
 		try {
 			const { albumId } = req.params;
@@ -209,7 +210,7 @@ class AlbumController {
 				message: 'Descrição do álbum atualizada com sucesso',
 				album
 			});
-			
+
 		} catch (error) {
 			console.log('Erro ao atualizar descrição do álbum:', error);
 			return res.status(500).json({ 
@@ -218,6 +219,50 @@ class AlbumController {
 			});
 		}
 	}
+
+	// Deleta álbum e todos os seus posts
+	async delete(req, res) {
+    try {
+      const { albumId } = req.params;
+      
+      // busca o álbum pelo ID
+      const album = await Album.findById(albumId);
+      
+      // verifica se o álbum existe
+      if (!album) {
+        return res.status(404).json({ message: 'Álbum não encontrado' });
+      }
+      
+      // verifica se o usuário é o dono do álbum
+      if (album.userId.toString() !== req.userId) {
+        return res.status(403).json({ 
+          message: 'Você não tem permissão para deletar este álbum' 
+        });
+      }
+      
+      // deletar todos os posts associados ao álbum
+      const deletePostsResult = await Post.deleteMany({ albumId });
+      const postsDeleted = deletePostsResult.deletedCount;
+      
+      // deletar o álbum
+      await Album.findByIdAndDelete(albumId);
+      
+      return res.json({
+        message: 'Álbum e posts deletados com sucesso',
+        details: {
+          albumDeleted: true,
+          postsDeleted
+        }
+      });
+      
+    } catch (error) {
+      console.log('Erro ao deletar álbum:', error);
+      return res.status(500).json({ 
+        message: 'Erro no servidor', 
+        error: error.message 
+      });
+    }
+  }
 	
 }
 
