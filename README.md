@@ -60,7 +60,7 @@ O Travelling API é um backend desenvolvido em Node.js que oferece suporte a um 
 * DELETE /posts/:postId - Deletar post
 
 ## 🔐 Autenticação
-A API utiliza JWT (JSON Web Token) para autenticação. Todas as rotas (exceto login e criação de usuário) requerem um token válido no header:
+A API utiliza JWT (JSON Web Token) para autenticação. Todas as rotas (exceto login e criação de usuário) requerem um token válido.
 
 ##  🛠 Projeto em construção
 * Assim que finalizar, sinalizo as informações de execução do Travelling API
