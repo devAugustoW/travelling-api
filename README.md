@@ -65,5 +65,5 @@ A API utiliza JWT (JSON Web Token) para autenticação. Todas as rotas (exceto l
 ##  🛠 Projeto em construção
 * Assim que finalizar, sinalizo as informações de execução do Travelling API
 
-✒️ Autor
+## ✒️ Autor
 Augusto Dantas - @devaugustow
