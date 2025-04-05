@@ -263,6 +263,42 @@ class AlbumController {
       });
     }
   }
+
+	// Filtrar álbuns por tipo de viagem e/ou atividade
+	async filterAlbums(req, res) {
+		try {
+			const { typeTrip, tripActivity } = req.query;
+			
+			// criar objeto de filtro com ID do usuário
+			const filter = { userId: req.userId };
+			
+			// adicionar filtros se eles existirem na query
+			if (typeTrip) filter.typeTrip = typeTrip;
+			if (tripActivity) filter.tripActivity = tripActivity;
+			
+			console.log('Query recebida:', req.query);
+			console.log('Filtro aplicado:', filter);
+			
+			// buscar álbuns com os filtros aplicados
+			const albums = await Album.find(filter)
+				.populate('userId', '-password')
+				.populate('cover')
+				.sort('-createdAt');
+			
+			return res.json({
+				message: 'Álbuns filtrados com sucesso',
+				count: albums.length,
+				albums
+			});
+			
+		} catch (error) {
+			console.log('Erro ao filtrar álbuns:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
 	
 }
 

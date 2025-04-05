@@ -19,11 +19,13 @@ routes.delete('/user/:id', authMiddleware, UserController.delete);
 // rotas álbum
 routes.post('/albums', authMiddleware, AlbumController.store);
 routes.get('/user/albums', authMiddleware, AlbumController.getUserAlbums);
+routes.get('/albums/filter', authMiddleware, AlbumController.filterAlbums);
 routes.get('/albums/:id', authMiddleware, AlbumController.getAlbumById);
 routes.patch('/albums/:albumId/location', authMiddleware, AlbumController.updateLocation);
 routes.patch('/albums/:albumId/title', authMiddleware, AlbumController.updateTitle);
 routes.patch('/albums/:albumId/description', authMiddleware, AlbumController.updateDescription);
 routes.delete('/albums/:albumId', authMiddleware, AlbumController.delete);
+
 
 // rotas post
 routes.post('/posts', authMiddleware, PostController.store);
