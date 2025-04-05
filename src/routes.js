@@ -30,6 +30,7 @@ routes.delete('/albums/:albumId', authMiddleware, AlbumController.delete);
 // rotas post
 routes.post('/posts', authMiddleware, PostController.store);
 routes.get('/posts/best', authMiddleware, PostController.getBestPosts);
+routes.get('/posts/search', authMiddleware, PostController.searchPosts);
 routes.get('/albums/:albumId/posts', authMiddleware, PostController.getPostsByAlbum);
 routes.get('/albums/:albumId/locations', authMiddleware, PostController.getPostLocationsByAlbum);
 routes.get('/posts/:id', authMiddleware, PostController.getPostById);

@@ -345,6 +345,50 @@ class PostController {
 			return res.status(500).json({ error: 'Erro ao deletar post' });
 		}
 	}
+
+	// Pesquisa de posts por texto
+	async searchPosts(req, res) {
+		try {
+			const { query } = req.query;
+			
+			if (!query || query.trim() === '') {
+				return res.json({
+					message: 'Busca vazia',
+					count: 0,
+					posts: []
+				});
+			}
+			
+			// regex case-insensitive para busca
+			const searchRegex = new RegExp(query, 'i');
+			
+			// busca posts que contenham o texto em qualquer um dos campos
+			const posts = await Post.find({
+				$or: [
+					{ title: searchRegex },
+					{ description: searchRegex },
+					{ nameLocation: searchRegex }
+				]
+			})
+			.populate('userId', '-password')
+			.populate('albumId')
+			.sort('-createdAt')
+			.limit(20); 
+			
+			return res.json({
+				message: 'Posts encontrados com sucesso',
+				count: posts.length,
+				posts
+			});
+			
+		} catch (error) {
+			console.log('Erro ao buscar posts:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
 }
 
 export default new PostController();
