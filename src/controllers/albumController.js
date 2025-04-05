@@ -272,12 +272,14 @@ class AlbumController {
 			// criar objeto de filtro com ID do usuário
 			const filter = { userId: req.userId };
 			
-			// adicionar filtros se eles existirem na query
-			if (typeTrip) filter.typeTrip = typeTrip;
-			if (tripActivity) filter.tripActivity = tripActivity;
+			// filtros com regex case-insensitive
+			if (typeTrip) {
+				filter.typeTrip = new RegExp(`^${typeTrip}$`, 'i');
+			}
 			
-			console.log('Query recebida:', req.query);
-			console.log('Filtro aplicado:', filter);
+			if (tripActivity) {
+				filter.tripActivity = new RegExp(`^${tripActivity}$`, 'i');
+			}
 			
 			// buscar álbuns com os filtros aplicados
 			const albums = await Album.find(filter)
