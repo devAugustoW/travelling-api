@@ -30,7 +30,7 @@ const albumSchema = new mongoose.Schema({
   },
 	cost: {
     type: String,
-		enum: ['1k', '1k - 3k', '3k - 5k', '5k - 10k', '+10k'],
+		enum: ['1K', '1K - 3K', '3K - 5K', '5K - 10K', '+10K'],
 		default: ""
   },
   description: {
