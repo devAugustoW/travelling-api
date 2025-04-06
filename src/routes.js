@@ -14,6 +14,9 @@ routes.post('/login', UserController.login);
 routes.get('/user', authMiddleware, UserController.show);	
 routes.put('/user/:id', authMiddleware, UserController.update);
 routes.delete('/user/:id', authMiddleware, UserController.delete);
+routes.patch('/user/profile-image', authMiddleware, UserController.updateProfileImage);
+routes.get('/user/stats', authMiddleware, AlbumController.getUserStats);
+
 
 
 // rotas álbum
@@ -25,6 +28,7 @@ routes.patch('/albums/:albumId/location', authMiddleware, AlbumController.update
 routes.patch('/albums/:albumId/title', authMiddleware, AlbumController.updateTitle);
 routes.patch('/albums/:albumId/description', authMiddleware, AlbumController.updateDescription);
 routes.delete('/albums/:albumId', authMiddleware, AlbumController.delete);
+
 
 
 // rotas post

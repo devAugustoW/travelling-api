@@ -111,17 +111,17 @@ class UserController {
 		try {
 			// busca usuário pelo ID, inserido pelo middleware 
 			const user = await User.findById(req.userId);
-			if (!user) return res.status(404).json({ 
-			message: 'Usuário não encontrado' 
-			});
+			if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
     
 			// extrai os dados do corpo da requisição
-			const { name, oldPassword, password } = req.body;
+			const { name, oldPassword, password, userImg } = req.body;
 
 			// atualiza se fornecido
 			if (name) user.name = name;
+			if (userImg) user.userImg = userImg;
+
+			// verifica se forneceu a senha antiga
 			if (password) {
-				// verifica se forneceu a senha antiga
 				if (!oldPassword) {
 					return res.status(400).json({ 
 						message: 'Senha atual é necessária para alterar a senha' 
@@ -143,10 +143,10 @@ class UserController {
 			// salva as alterações de edição do usuário
 			await user.save();
 
-			// Não retornar a senha na resposta
+			// não retorna a senha na resposta
 			user.password = undefined;
 
-			// retorna a resposta com o usuário atualizado
+			// resposta com o usuário atualizado
 			return res.json({
 				message: 'Usuário atualizado com sucesso!',
 				user
@@ -160,6 +160,38 @@ class UserController {
 			});
 		}
   }
+
+	// atualiza a imagem de perfil
+	async updateProfileImage(req, res) {
+		try {
+			// busca usuário pelo ID
+			const user = await User.findById(req.userId);
+			if (!user) return res.status(404).json({ message: 'Usuário não encontrado' });
+			
+			// imagem do corpo da requisição
+			const { userImg } = req.body;
+			if (!userImg) return res.status(400).json({ message: 'Imagem não fornecida' });
+			
+			// atualiza a imagem
+			user.userImg = userImg;
+			await user.save();
+			
+			// não retorna a senha na resposta
+			user.password = undefined;
+			
+			// resposta com a imagem atualizada
+			return res.json({
+				message: 'Foto de perfil atualizada com sucesso!',
+				user
+			});
+		} catch (error) {
+			console.log('Erro ao atualizar foto de perfil:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
 	
 	// deletar usuário
 	async delete(req, res) {

@@ -301,6 +301,60 @@ class AlbumController {
 			});
 		}
 	}
+
+	// contagem de álbuns, fotos e soma de custos
+	async getUserStats(req, res) {
+		try {
+			// busca todos os álbuns do usuário
+			const albums = await Album.find({ userId: req.userId });
+			
+			// conta número de álbuns
+			const albumCount = albums.length;
+			
+			// busca todas as fotos (posts) do usuário agrupadas por álbum
+			const posts = await Post.find({ userId: req.userId });
+			const photoCount = posts.length;
+			
+			// calcula custo total
+			let totalCost = 0;
+			
+			albums.forEach(album => {
+				switch(album.cost) {
+					case '1K':
+						totalCost += 1;
+						break;
+					case '1K - 3K':
+						totalCost += 2;
+						break;
+					case '3K - 5K':
+						totalCost += 4;
+						break;
+					case '5K - 10K':
+						totalCost += 8;
+						break;
+					case '+10K':
+						totalCost += 10;
+						break;
+					default:
+						break;
+				}
+			});
+			
+			return res.json({
+				albumCount,
+				photoCount,
+				totalCost,
+				formattedTotalCost: `${totalCost}K`
+			});
+			
+		} catch (error) {
+			console.log('Erro ao buscar estatísticas do usuário:', error);
+			return res.status(500).json({ 
+				message: 'Erro no servidor', 
+				error: error.message 
+			});
+		}
+	}
 	
 }
 
