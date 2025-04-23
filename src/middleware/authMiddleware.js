@@ -21,6 +21,7 @@ const authMiddleware = async (req, res, next) => {
 
 		// adiciona o id do usuário na requisição
 		req.userId = decoded.id;
+		req.isVisitor = decoded.isVisitor || false;
 		next();
 
 	} catch (error) {

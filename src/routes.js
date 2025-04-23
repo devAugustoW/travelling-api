@@ -3,45 +3,61 @@ import UserController from './controllers/userController';
 import AlbumController from './controllers/albumController';
 import PostController from './controllers/postController';
 import authMiddleware from './middleware/authMiddleware';
+import visitorMiddleware from './middleware/visitorMiddleware';
 
 const routes = new Router();
+
+// Rota para login como visitante
+routes.post('/login-visitor', visitorMiddleware, UserController.loginAsVisitor);
+
 
 // rotas públicas
 routes.post('/user', UserController.store);
 routes.post('/login', UserController.login);
 
-// rotas user
-routes.get('/user', authMiddleware, UserController.show);	
-routes.put('/user/:id', authMiddleware, UserController.update);
-routes.delete('/user/:id', authMiddleware, UserController.delete);
-routes.patch('/user/profile-image', authMiddleware, UserController.updateProfileImage);
-routes.get('/user/stats', authMiddleware, AlbumController.getUserStats);
+// Middleware para proteger todas as rotas abaixo
+routes.use(authMiddleware);
 
+
+// Middleware de visitante para todas as requisições de modificação
+routes.use((req, res, next) => {
+   // Aplica o middleware apenas para métodos de modificação
+   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
+     return visitorMiddleware(req, res, next);
+   }
+   next();
+});
+
+
+// rotas user
+routes.get('/user', UserController.show);	
+routes.put('/user/:id', UserController.update);
+routes.delete('/user/:id', UserController.delete);
+routes.patch('/user/profile-image', UserController.updateProfileImage);
+routes.get('/user/stats', AlbumController.getUserStats);
 
 
 // rotas álbum
-routes.post('/albums', authMiddleware, AlbumController.store);
-routes.get('/user/albums', authMiddleware, AlbumController.getUserAlbums);
-routes.get('/albums/filter', authMiddleware, AlbumController.filterAlbums);
-routes.get('/albums/:id', authMiddleware, AlbumController.getAlbumById);
-routes.patch('/albums/:albumId/location', authMiddleware, AlbumController.updateLocation);
-routes.patch('/albums/:albumId/title', authMiddleware, AlbumController.updateTitle);
-routes.patch('/albums/:albumId/description', authMiddleware, AlbumController.updateDescription);
-routes.delete('/albums/:albumId', authMiddleware, AlbumController.delete);
-
+routes.post('/albums', AlbumController.store);
+routes.get('/user/albums', AlbumController.getUserAlbums);
+routes.get('/albums/filter', AlbumController.filterAlbums);
+routes.get('/albums/:id', AlbumController.getAlbumById);
+routes.patch('/albums/:albumId/location', AlbumController.updateLocation);
+routes.patch('/albums/:albumId/title', AlbumController.updateTitle);
+routes.patch('/albums/:albumId/description', AlbumController.updateDescription);
+routes.delete('/albums/:albumId', AlbumController.delete);
 
 
 // rotas post
-routes.post('/posts', authMiddleware, PostController.store);
-routes.get('/posts/best', authMiddleware, PostController.getBestPosts);
-routes.get('/posts/search', authMiddleware, PostController.searchPosts);
-routes.get('/albums/:albumId/posts', authMiddleware, PostController.getPostsByAlbum);
-routes.get('/albums/:albumId/locations', authMiddleware, PostController.getPostLocationsByAlbum);
-routes.get('/posts/:id', authMiddleware, PostController.getPostById);
-routes.patch('/posts/:postId', authMiddleware, PostController.updatePost);
-routes.patch('/posts/:postId/grade', authMiddleware, PostController.updateGrade);
-routes.delete('/posts/:postId', authMiddleware, PostController.delete);
-
+routes.post('/posts', PostController.store);
+routes.get('/posts/best', PostController.getBestPosts);
+routes.get('/posts/search', PostController.searchPosts);
+routes.get('/albums/:albumId/posts', PostController.getPostsByAlbum);
+routes.get('/albums/:albumId/locations', PostController.getPostLocationsByAlbum);
+routes.get('/posts/:id', PostController.getPostById);
+routes.patch('/posts/:postId', PostController.updatePost);
+routes.patch('/posts/:postId/grade', PostController.updateGrade);
+routes.delete('/posts/:postId', PostController.delete);
 
 
 export default routes;

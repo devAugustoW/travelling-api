@@ -2,25 +2,25 @@ import Album from '../models/albumSchema';
 import Post from '../models/postSchema';
 
 class AlbumController {
-  // Cria album
-  async store(req, res) {
-    try {
+	// Cria album
+	async store(req, res) {
+		try {
 			// resgata os dados do corpo da requisição
-			const { 
-        title, 
-        description, 
-        destination, 
+			const {
+				title,
+				description,
+				destination,
 				typeTrip,
-        tripActivity,  
-        difficulty, 
-        timeTravel, 
-        cost, 
-        grade, 
-        location 
-      } = req.body;
+				tripActivity,
+				difficulty,
+				timeTravel,
+				cost,
+				grade,
+				location
+			} = req.body;
 
-      // adiciona o userId do token à requisição
-      req.body.userId = req.userId;
+			// adiciona o userId do token à requisição
+			req.body.userId = req.userId;
 
 			// criação do álbum com todos os campos
 			const album = await Album.create({
@@ -28,7 +28,7 @@ class AlbumController {
 				description,
 				destination,
 				typeTrip,
-				tripActivity,  
+				tripActivity,
 				difficulty,
 				timeTravel,
 				cost,
@@ -38,42 +38,42 @@ class AlbumController {
 			});
 
 			// retorna a resposta com o álbum criado
-      return res.status(201).json({
-        message: 'Álbum criado com sucesso!',
-        album
-      });
+			return res.status(201).json({
+				message: 'Álbum criado com sucesso!',
+				album
+			});
 
-    } catch (error) {
-      console.log('Erro ao criar álbum:', error);
-      return res.status(500).json({ 
-        message: 'Erro no servidor', 
-        error: error.message 
-      });
-    }
-  }
+		} catch (error) {
+			console.log('Erro ao criar álbum:', error);
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
+			});
+		}
+	}
 
 	// Busca álbuns do usuário logado
-  async getUserAlbums(req, res) {
-    try {
-      const albums = await Album.find({ userId: req.userId })
-			.populate('userId', '-password')
-			.populate('cover')
-			.sort('-createdAt');
+	async getUserAlbums(req, res) {
+		try {
+			const albums = await Album.find({ userId: req.userId })
+				.populate('userId', '-password')
+				.populate('cover')
+				.sort('-createdAt');
 
-      return res.json({
-        message: 'Álbuns encontrados com sucesso',
-        count: albums.length,
-        albums
-      });
+			return res.json({
+				message: 'Álbuns encontrados com sucesso',
+				count: albums.length,
+				albums
+			});
 
-    } catch (error) {
-      console.log('Erro ao buscar álbuns do usuário:', error);
-      return res.status(500).json({ 
-        message: 'Erro no servidor', 
-        error: error.message 
-      });
-    }
-  }
+		} catch (error) {
+			console.log('Erro ao buscar álbuns do usuário:', error);
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
+			});
+		}
+	}
 
 	// Busca álbum por id
 	async getAlbumById(req, res) {
@@ -96,8 +96,8 @@ class AlbumController {
 
 			// Verifica se os dados necessários foram fornecidos
 			if (!latitude || !longitude) {
-				return res.status(400).json({ 
-					message: 'Latitude e longitude são obrigatórios' 
+				return res.status(400).json({
+					message: 'Latitude e longitude são obrigatórios'
 				});
 			}
 
@@ -111,8 +111,8 @@ class AlbumController {
 
 			// Verifica se o usuário é o dono do álbum
 			if (album.userId.toString() !== req.userId) {
-				return res.status(403).json({ 
-					message: 'Você não tem permissão para atualizar este álbum' 
+				return res.status(403).json({
+					message: 'Você não tem permissão para atualizar este álbum'
 				});
 			}
 
@@ -131,9 +131,9 @@ class AlbumController {
 			});
 		} catch (error) {
 			console.log('Erro ao atualizar localização do álbum:', error);
-			return res.status(500).json({ 
-				message: 'Erro no servidor', 
-				error: error.message 
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
 			});
 		}
 	};
@@ -154,8 +154,8 @@ class AlbumController {
 
 			// verifica se o usuário é o dono do álbum
 			if (album.userId.toString() !== req.userId) {
-				return res.status(403).json({ 
-					message: 'Você não tem permissão para atualizar este álbum' 
+				return res.status(403).json({
+					message: 'Você não tem permissão para atualizar este álbum'
 				});
 			}
 
@@ -172,9 +172,9 @@ class AlbumController {
 
 		} catch (error) {
 			console.log('Erro ao atualizar título do álbum:', error);
-			return res.status(500).json({ 
-				message: 'Erro no servidor', 
-				error: error.message 
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
 			});
 		}
 	}
@@ -195,8 +195,8 @@ class AlbumController {
 
 			// verifica se o usuário é o dono do álbum
 			if (album.userId.toString() !== req.userId) {
-				return res.status(403).json({ 
-					message: 'Você não tem permissão para atualizar este álbum' 
+				return res.status(403).json({
+					message: 'Você não tem permissão para atualizar este álbum'
 				});
 			}
 
@@ -213,91 +213,91 @@ class AlbumController {
 
 		} catch (error) {
 			console.log('Erro ao atualizar descrição do álbum:', error);
-			return res.status(500).json({ 
-				message: 'Erro no servidor', 
-				error: error.message 
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
 			});
 		}
 	}
 
 	// Deleta álbum e todos os seus posts
 	async delete(req, res) {
-    try {
-      const { albumId } = req.params;
-      
-      // busca o álbum pelo ID
-      const album = await Album.findById(albumId);
-      
-      // verifica se o álbum existe
-      if (!album) {
-        return res.status(404).json({ message: 'Álbum não encontrado' });
-      }
-      
-      // verifica se o usuário é o dono do álbum
-      if (album.userId.toString() !== req.userId) {
-        return res.status(403).json({ 
-          message: 'Você não tem permissão para deletar este álbum' 
-        });
-      }
-      
-      // deletar todos os posts associados ao álbum
-      const deletePostsResult = await Post.deleteMany({ albumId });
-      const postsDeleted = deletePostsResult.deletedCount;
-      
-      // deletar o álbum
-      await Album.findByIdAndDelete(albumId);
-      
-      return res.json({
-        message: 'Álbum e posts deletados com sucesso',
-        details: {
-          albumDeleted: true,
-          postsDeleted
-        }
-      });
-      
-    } catch (error) {
-      console.log('Erro ao deletar álbum:', error);
-      return res.status(500).json({ 
-        message: 'Erro no servidor', 
-        error: error.message 
-      });
-    }
-  }
+		try {
+			const { albumId } = req.params;
+
+			// busca o álbum pelo ID
+			const album = await Album.findById(albumId);
+
+			// verifica se o álbum existe
+			if (!album) {
+				return res.status(404).json({ message: 'Álbum não encontrado' });
+			}
+
+			// verifica se o usuário é o dono do álbum
+			if (album.userId.toString() !== req.userId) {
+				return res.status(403).json({
+					message: 'Você não tem permissão para deletar este álbum'
+				});
+			}
+
+			// deletar todos os posts associados ao álbum
+			const deletePostsResult = await Post.deleteMany({ albumId });
+			const postsDeleted = deletePostsResult.deletedCount;
+
+			// deletar o álbum
+			await Album.findByIdAndDelete(albumId);
+
+			return res.json({
+				message: 'Álbum e posts deletados com sucesso',
+				details: {
+					albumDeleted: true,
+					postsDeleted
+				}
+			});
+
+		} catch (error) {
+			console.log('Erro ao deletar álbum:', error);
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
+			});
+		}
+	}
 
 	// Filtrar álbuns por tipo de viagem e/ou atividade
 	async filterAlbums(req, res) {
 		try {
 			const { typeTrip, tripActivity } = req.query;
-			
+
 			// criar objeto de filtro com ID do usuário
 			const filter = { userId: req.userId };
-			
+
 			// filtros com regex case-insensitive
 			if (typeTrip) {
 				filter.typeTrip = new RegExp(`^${typeTrip}$`, 'i');
 			}
-			
+
 			if (tripActivity) {
 				filter.tripActivity = new RegExp(`^${tripActivity}$`, 'i');
 			}
-			
+
 			// buscar álbuns com os filtros aplicados
 			const albums = await Album.find(filter)
 				.populate('userId', '-password')
 				.populate('cover')
 				.sort('-createdAt');
-			
+
 			return res.json({
 				message: 'Álbuns filtrados com sucesso',
 				count: albums.length,
 				albums
 			});
-			
+
 		} catch (error) {
 			console.log('Erro ao filtrar álbuns:', error);
-			return res.status(500).json({ 
-				message: 'Erro no servidor', 
-				error: error.message 
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
 			});
 		}
 	}
@@ -307,19 +307,19 @@ class AlbumController {
 		try {
 			// busca todos os álbuns do usuário
 			const albums = await Album.find({ userId: req.userId });
-			
+
 			// conta número de álbuns
 			const albumCount = albums.length;
-			
+
 			// busca todas as fotos (posts) do usuário agrupadas por álbum
 			const posts = await Post.find({ userId: req.userId });
 			const photoCount = posts.length;
-			
+
 			// calcula custo total
 			let totalCost = 0;
-			
+
 			albums.forEach(album => {
-				switch(album.cost) {
+				switch (album.cost) {
 					case '1K':
 						totalCost += 1;
 						break;
@@ -339,23 +339,23 @@ class AlbumController {
 						break;
 				}
 			});
-			
+
 			return res.json({
 				albumCount,
 				photoCount,
 				totalCost,
 				formattedTotalCost: `${totalCost}K`
 			});
-			
+
 		} catch (error) {
 			console.log('Erro ao buscar estatísticas do usuário:', error);
-			return res.status(500).json({ 
-				message: 'Erro no servidor', 
-				error: error.message 
+			return res.status(500).json({
+				message: 'Erro no servidor',
+				error: error.message
 			});
 		}
 	}
-	
+
 }
 
 export default new AlbumController();

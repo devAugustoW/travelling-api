@@ -220,6 +220,28 @@ class UserController {
 			});
 		}
 	}
+
+	// Login como visitante
+	async loginAsVisitor(req, res) {
+		try {
+		// Buscar usuário camelo
+		const user = await User.findOne({ email: 'camelo@email.com' });
+		if (!user) return res.status(404).json({ message: 'Usuário de demonstração não encontrado' });
+		
+		// Gerar token especial com flag de visitante
+		const token = jwt.sign(
+			{ id: user._id, isVisitor: true },
+			process.env.JWT_SECRET,
+			{ expiresIn: '24h' }
+		);
+		
+		return res.status(200).json({ token });
+
+		} catch (error) {
+			return res.status(500).json({ message: 'Erro no servidor', error: error.message });
+		
+		}
+	}
 }
 
 export default new UserController();
