@@ -15,18 +15,10 @@ routes.post('/login-visitor', visitorMiddleware, UserController.loginAsVisitor);
 routes.post('/user', UserController.store);
 routes.post('/login', UserController.login);
 
-// Middleware para proteger todas as rotas abaixo
+// Middleware para todas as rotas abaixo
 routes.use(authMiddleware);
-
-
-// Middleware de visitante para todas as requisições de modificação
-routes.use((req, res, next) => {
-   // Aplica o middleware apenas para métodos de modificação
-   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
-     return visitorMiddleware(req, res, next);
-   }
-   next();
-});
+// Middleware de visitante para as rotas protegidas
+routes.use(visitorMiddleware);
 
 
 // rotas user
