@@ -228,7 +228,7 @@ class UserController {
 		const user = await User.findOne({ email: 'camelo@email.com' });
 		if (!user) return res.status(404).json({ message: 'Usuário de demonstração não encontrado' });
 		
-		// Gerar token especial com flag de visitante
+		// Gerar token com flag de visitante
 		const token = jwt.sign(
 			{ id: user._id, isVisitor: true },
 			process.env.JWT_SECRET,

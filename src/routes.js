@@ -7,9 +7,9 @@ import visitorMiddleware from './middleware/visitorMiddleware';
 
 const routes = new Router();
 
+
 // Rota para login como visitante
 routes.post('/login-visitor', visitorMiddleware, UserController.loginAsVisitor);
-
 
 // rotas públicas
 routes.post('/user', UserController.store);
