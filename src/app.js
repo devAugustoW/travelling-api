@@ -11,12 +11,12 @@ mongoose.connect(process.env.MONGO_URI)
 	.then(() => console.log('Conectado ao MongoDB!'))
 	.catch((error) =>console.error('Erro ao conectar ao MongoDB:', error));
 
-// Configuração do CORS
+// CORS
 app.use(cors({
   origin: '*', 
 	methods: ['GET', 'POST', 'PUT', 'DELETE'],
 	allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true,
+  	credentials: true,
 	optionsSuccessStatus: 200 
 }));
 
