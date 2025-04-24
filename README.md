@@ -1,21 +1,21 @@
 # Travelling API
 
 ## 📋 Descrição do Projeto
-O Travelling API é um backend desenvolvido em Node.js que oferece suporte a um aplicativo de gerenciamento de viagens. Os usuários podem criar álbuns temáticos para diferentes tipos de viagens (praia, montanha, cidade, etc.), adicionar fotos com localizações, avaliações e descrições detalhadas, percorrer em mapa interativo os pontos turísticos visitados.
+O Travelling API é um backend desenvolvido em Node.js que oferece suporte a um aplicativo de gerenciamento de viagens. Os usuários podem criar álbuns temáticos para diferentes tipos de viagens (praia, montanha, cidade, etc.), adicionar fotos com localizações, avaliações e descrições detalhadas e percorrer em mapa interativo os pontos turísticos visitados.
 
 ## 🚀 Funcionalidades Principais
 ### Álbuns
 * Criação de álbuns com categorização por tipo de viagem
-* Gerenciamento de informações como destino, dificuldade e custo
+* Gerenciamento de informações como destino, atividades e custo
 * Atualização de título, descrição e localização
 * Sistema de avaliação média baseado nas fotos
 
 ### Posts (Fotos)
 * Upload e gerenciamento de fotos com descrições
-*Sistema de geolocalização para cada foto
-*Avaliações individuais (0-5 estrelas)
+* Sistema de geolocalização para cada foto
+* Avaliações individuais (0-5 estrelas)
 * Seleção de foto de capa para álbuns
-* Visualização das melhores fotos (grade 5)
+* Visualização das melhores fotos em seção Home
 
 ### Usuários
 * Login com criptografia de senha
@@ -29,6 +29,7 @@ O Travelling API é um backend desenvolvido em Node.js que oferece suporte a um 
 * MongoDB com Mongoose
 * JWT para autenticação
 * Cors para segurança
+* Bcrypt para criptografia de senha
 * Dotenv para variáveis de ambiente
 
 ## 📚 Documentação da API
